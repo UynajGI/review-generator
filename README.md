@@ -94,7 +94,8 @@ npm install -g mineru-open-api
 本项目基于以下开源项目：
 
 - [ElegantNote](https://github.com/ElegantLaTeX/ElegantNote) — 优雅的 LaTeX 中文笔记模板
-- [MinerU-Ecosystem](https://github.com/opendatalab/MinerU-Ecosystem) — 高质量文档内容提取工具链
+- [MinerU](https://github.com/opendatalab/MinerU) — 高精度 PDF 文档解析与 OCR 引擎
+- [MinerU-Ecosystem](https://github.com/opendatalab/MinerU-Ecosystem) — MinerU 工具链生态（含 CLI 封装）
 
 ## 许可证
 
