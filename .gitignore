@@ -1,0 +1,36 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.blg
+*.bbl
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+*.nav
+*.snm
+*.vrb
+_build/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db

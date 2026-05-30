@@ -1,0 +1,23 @@
+{
+  "skill_name": "lit-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我写个文献综述，我有大概10篇关于量子计算的PDF论文。",
+      "expected_output": "Orchestrator asks about working directory, creates project structure if needed, and proceeds to Stage 0 to confirm topic and format.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我之前已经用lit-review做了5篇论文的精读，sections都写好了，现在想加图片。",
+      "expected_output": "Status script detects existing sections, orchestrator jumps to Stage 4 (image insertion) without redoing previous stages.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "我在~/papers/下有20篇物理方向的PDF，帮我整理成综述笔记。",
+      "expected_output": "Orchestrator detects PDFs in a directory, confirms whether to set up project structure there, then proceeds to Stage 1 for auto-renaming.",
+      "files": []
+    }
+  ]
+}

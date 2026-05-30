@@ -1,0 +1,42 @@
+{
+  "skill_name": "elegantnote-assistant",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我想用 ElegantNote 写一份实变函数的课堂笔记，在 iPad 上阅读，需要护眼模式。帮我生成完整的 tex 文件。",
+      "expected_output": "A complete compilable .tex file using ElegantNote with Chinese mode, pad device, geye mode, suitable for math lecture notes on iPad",
+      "expectations": [
+        "The documentclass includes 'cn' or 'lang=cn' for Chinese mode",
+        "The documentclass includes 'pad' or 'device=pad' for iPad阅读",
+        "The documentclass includes 'geye' or 'mode=geye' for eye protection mode",
+        "The generated .tex file contains a complete document structure with \\begin{document} and \\end{document}",
+        "The document contains \\maketitle with title, author information",
+        "The output includes at least one theorem environment (theorem, definition, lemma, etc.) suitable for math notes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to create presentation notes for a machine learning talk. It should be in English, use the screen device size, and have large fonts for projection. Please generate the complete .tex file.",
+      "expected_output": "A complete compilable .tex file using ElegantNote with English mode, screen device, large font (14pt+), suitable for presentation",
+      "expectations": [
+        "The documentclass includes 'en' or 'lang=en' for English mode",
+        "The documentclass includes 'screen' or 'device=screen' for presentation device",
+        "The font size is set to 14pt or larger",
+        "The generated .tex file is a complete compilable document",
+        "The content is in English with appropriate structure for ML presentation notes"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我想用 ElegantNote 写读书笔记，希望有一种温暖复古的感觉。应该选什么颜色和模式？另外字体大小该怎么选？直接帮我生成一个完整的 tex 文件。",
+      "expected_output": "A complete .tex file with warm/vintage aesthetic using sepia mode and brown color theme, with explanation of the choices",
+      "expectations": [
+        "The documentclass includes 'sepia' or 'mode=sepia' for warm vintage feel",
+        "The documentclass includes 'brown' or 'color=brown' for warm color theme",
+        "The font size recommendation (10pt or 11pt) is reasonable for reading notes",
+        "A complete compilable .tex file is generated",
+        "The explanation mentions why sepia+brown combination creates warm vintage feel"
+      ]
+    }
+  ]
+}
