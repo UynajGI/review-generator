@@ -49,7 +49,7 @@ MinerU 文档提取 CLI 技能封装。支持 PDF、图片和网页到 Markdown 
 ## 安装
 
 ```bash
-npx skills add https://github.com/UynajGI/review-generator/skills
+npx skills add https://github.com/UynajGI/review-generator/tree/main/skills
 ```
 
 在 Claude Code 中，技能会自动被发现和加载。

@@ -49,7 +49,7 @@ MinerU document extraction CLI skill wrapper. Converts PDFs, images, and web pag
 ## Installation
 
 ```bash
-npx skills add https://github.com/UynajGI/review-generator/skills
+npx skills add https://github.com/UynajGI/review-generator/tree/main/skills
 ```
 
 In Claude Code, skills are automatically discovered and loaded.
