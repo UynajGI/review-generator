@@ -89,6 +89,13 @@ npm install -g mineru-open-api
         └── _meta.json
 ```
 
+## Acknowledgments
+
+This project builds on the following open-source projects:
+
+- [ElegantNote](https://github.com/ElegantLaTeX/ElegantNote) — Elegant LaTeX note template
+- [MinerU-Ecosystem](https://github.com/opendatalab/MinerU-Ecosystem) — High-quality document content extraction toolkit
+
 ## License
 
 MIT License - see [LICENSE](./LICENSE)
