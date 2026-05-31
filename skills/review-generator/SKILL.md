@@ -13,6 +13,8 @@ description: 全自动文献综述生成器。从 N 篇 PDF 到完整中文综�
 
 然后问用户确认：是否从这个阶段继续？如果用户说"前面已经做过了"，根据 status.sh 输出跳到对应阶段。如果用户说"从头来"，回到阶段 0。
 
+**🔴 CHECKPOINT**：`status.sh` 输出结果后，必须停下来让用户确认阶段，不要自动跳转。
+
 **如果 `status.sh` 输出 Stage -1（连 refs/ 都没有）**：
 → 问用户想在哪里创建项目。目录不存在就 `mkdir -p` 创建，然后建 `refs/`（放 PDF）、`sections/`（输出 .tex）。
 
@@ -50,7 +52,7 @@ Goal 会在 session 结束时提醒用户未完成，下次打开时自动续接
 
 ### 阶段 0：确认目标
 
-先不管 PDF，把三件事敲定：综述主题、预期论文数量、输出格式偏好（A4=打印用 `normal`、平板用 `pad`、投影用 `screen`）。格式决定后续 ElegantNote 设备选项和 DPI 计算基准。
+**🔴 CHECKPOINT**：处理任何 PDF 之前，必须先和用户敲定三件事：综述主题、预期论文数量、输出格式偏好（A4=打印用 `normal`、平板用 `pad`、投影用 `screen`）。格式决定后续 ElegantNote 设备选项和 DPI 计算基准。三件事未确认前不进入阶段 1。
 
 ### 阶段 1：论文收集 + 自动重命名
 
@@ -119,9 +121,11 @@ python scripts/fetch_bib.py --file dois.txt -o refs/refs.bib
 
 每轮修完后重新编译。循环直到用户说"可以了"。
 
+**🛑 STOP**：审核循环的退出条件是用户明确说"可以了"，不要自作主张判定"质量够了"而提前结束。
+
 ### 阶段 8：交付
 
-`git add -A && git commit && git status` 确认 clean。
+**🔴 CHECKPOINT**：交付前最后确认——展示编译结果，让用户检查 PDF 输出。用户确认无误后再 `git add -A && git commit && git status` 确认 clean。
 
 ## 遇到问题时
 
