@@ -128,6 +128,18 @@ python scripts/dpi_check.py sections/ refs/images/ --device normal
 - 极简英文：`[en,pad,black,11pt]`
 - 暖色阅读：`[cn,pad,sepia,brown,11pt]`
 
+## 不要做的事（反模式）
+
+| # | 不要做 | 原因 | 正确做法 |
+|---|--------|------|---------|
+| 1 | 所有图都用 `width=\linewidth` | 低 DPI 图会锯齿模糊 | 先跑 `dpi_check.py`，按 DPI 计算比例 |
+| 2 | 中文文档用 pdfLaTeX | 中文乱码 | 必须 XeLaTeX |
+| 3 | 插图片不带扩展名 | LaTeX 找不到文件 | 确保 `.jpg`/`.png` 扩展名完整 |
+| 4 | 忘了复制 `elegantnote.cls` | 编译报错找不到类文件 | 创建文档时一并复制 cls 到项目目录 |
+| 5 | 英文模式用 `\zhdate` | 命令未定义报错 | 切 `cn` 或用 `\date{\today}` |
+| 6 | `\SI{}{}` 包在 `$...$` 里 | 文本命令不能进数学模式 | 去掉外层 `$`，`\SI` 直接写在正文中 |
+| 7 | 编译链用 `&&` 串联 | xelatex warning 也 exit≠0，bibtex 被跳过 | 用 `;` 串联：`xelatex main; bibtex main; xelatex main; xelatex main` |
+
 ## 编译与排错
 
 ```bash
