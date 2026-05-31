@@ -1,6 +1,6 @@
 <p align="center">
   <strong>从文献库到结构化综述 / From PDF Collection to Structured Review</strong><br/>
-  把收集好的论文变成逐篇精读、按时序编排的中文综述 · Turn your PDF collection into a chronologically-organized Chinese literature review with per-paper deep reading
+  把收集好的论文变成逐篇精读、按时序编排的文献综述 · Turn your PDF collection into a chronologically-organized literature review with per-paper deep reading
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 
 ### review-generator
 
-把收集好的论文 PDF 变成一篇结构完整的中文文献综述。**论文由人收集**（AI 找不全文献），AI 负责逐篇精读、按时序编排、保留每篇细节不偷懒。
+把收集好的论文 PDF 变成一篇结构完整的文献综述。**论文由人收集**（AI 找不全文献），AI 负责逐篇精读、按时序编排、保留每篇细节不偷懒。输出语言由输入论文决定。
 
 核心理念：
 - **人找论文，AI 写综述**：你只管把 PDF 丢进 `refs/`，不用手动命名，剩下的全交给 AI
