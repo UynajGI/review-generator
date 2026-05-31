@@ -1,6 +1,6 @@
 <p align="center">
-  <strong>全自动文献综述生成器 / Automated Literature Review Generator</strong><br/>
-  Claude Code 学术 PDF 处理技能集合 · A collection of Claude Code skills for academic PDF processing
+  <strong>从文献库到结构化综述 / From PDF Collection to Structured Review</strong><br/>
+  把收集好的论文变成逐篇精读、按时序编排的中文综述 · Turn your PDF collection into a chronologically-organized Chinese literature review with per-paper deep reading
 </p>
 
 <p align="center">
@@ -19,11 +19,16 @@
 
 ### review-generator
 
-从 N 篇 PDF 到完整中文文献综述的全自动 pipeline。全 subagent 并行驱动，含多轮审核深化。
+把收集好的论文 PDF 变成一篇结构完整的中文文献综述。**论文由人收集**（AI 找不全文献），AI 负责逐篇精读、按时序编排、保留每篇细节不偷懒。
 
-- 论文自动重命名与排序
-- PDF → Markdown 批量提取
-- 并行精读生成结构化笔记
+核心理念：
+- **人找论文，AI 写综述**：你只管把 PDF 丢进 `refs/`，不用手动命名，剩下的全交给 AI
+- **每篇独立 subagent，不偷懒**：串行读 16 篇 AI 会跳读漏内容，并行 subagent 每篇都被完整深读，不会丢公式、丢数据、丢物理诠释
+- **按时间脉络编排**：自动提取年份和作者，从最早的奠基工作到最新进展，按时间线层层展开
+
+- 论文自动重命名与按时序排序
+- PDF → Markdown 批量提取（MinerU OCR）
+- 并行 subagent 逐篇精读，每篇生成独立结构化笔记
 - 图片插入与 DPI 自适应
 - 参考文献自动获取（Crossref API）
 - 主文档编译（ElegantNote + XeLaTeX）
