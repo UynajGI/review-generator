@@ -31,6 +31,10 @@ cp assets/elegantnote-cn.tex ./目标目录/my-note.tex
 - 默认输出完整可编译的 `.tex` 文件
 - 解释选项时给出具体代码而非抽象描述
 
+**🔴 CHECKPOINT**：复制模板文件后、开始写正文前，必须向用户确认设备选项（pad/normal/screen）、颜色主题和语言模式。不要跳过确认直接生成完整文档。
+**🔴 CHECKPOINT**：插入任何图片前，必须先跑 `scripts/dpi_check.py` 统一检查，不要手动单张调整。
+**🛑 STOP**：编译失败时，先对照下方「编译与排错」表逐条检查再重试，不要连续盲目重编译。
+
 ## 文档类选项速查
 
 ElegantNote 基于 `article`，所有选项可作为 `\documentclass[options]{elegantnote}` 全局选项，也支持 `key=value`。
