@@ -216,6 +216,17 @@ Default `ch`. Common values:
 - **Batch partially fails**: succeeded files saved; check stderr for per-file status
 - **Timeout**: increase `--timeout 1600`; large files may need 600+
 
+## 不要做的事（反模式）
+
+| # | 不要做 | 原因 | 正确做法 |
+|---|--------|------|---------|
+| 1 | 跳过 `auth --verify` 直接跑 `extract` | 可能 token 过期，401 中断批量任务 | 每次使用前先 verify |
+| 2 | 用 `flash-extract` 处理学术论文 | 无表格/公式识别，关键内容丢失 | 用 `extract --model vlm` |
+| 3 | 忽略 exit code 4 反复重试 `flash-extract` | 文件超 10MB 或 20 页上限，重试无用 | 切 `extract` 或用 `--pages` 分批 |
+| 4 | 不指定 `-o` 就跑批量 | stdout 混合无法分离 | 批量模式必须 `-o` |
+| 5 | 文件路径含空格不引号 | shell 解析断裂 | `mineru-open-api extract "my file.pdf"` |
+| 6 | 遇到 429 频繁重试 `flash-extract` | IP 速率限制，越试越锁 | 等几分钟或切 `extract` |
+
 ## Notes
 
 - `extract` requires token but provides tables, formulas, multi-format, batch
