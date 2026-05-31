@@ -19,7 +19,7 @@
 
 ### review-generator
 
-Turn your PDF collection into a well-structured literature review. **Humans collect the papers** (AI can't find them all), AI does the deep reading, chronological ordering, and per-paper detail preservation. Output language follows the input papers.
+Turn your PDF collection into a well-structured literature review. **Humans collect the papers** (AI can't find them all), AI does the deep reading, chronological ordering, and per-paper detail preservation. Output language is determined by the user.
 
 Core ideas:
 - **You find papers, AI writes the review**: just drop PDFs into `refs/` — no manual renaming needed

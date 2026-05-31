@@ -1,6 +1,6 @@
 # 文献综述全自动生成工作流
 
-> 从 N 篇 PDF 论文到完整中文综述（每篇详解 + 图片 + 引用），全 agent 驱动，零手动排版。
+> 从 N 篇 PDF 论文到完整综述（每篇详解 + 图片 + 引用），全 agent 驱动，零手动排版。输出语言由使用者决定。
 > 将 `N` 替换为你的论文数量，其余参数自动适配。
 >
 > **依赖技能**：`Skill("elegantnote-assistant")` — 处理文档创建、图片 DPI 适配和编译排错。`Skill("mineru-document-extractor")` — 处理 PDF 提取。
@@ -67,12 +67,12 @@ project/
 
 ```
 你是第 K 篇论文的精读 agent。阅读 /path/to/refs/paper_K.md，
-写出完整的中文 LaTeX section。保存到 /path/to/sections/sec_K.tex。
+写出完整的 LaTeX section（语言由使用者决定）。保存到 /path/to/sections/sec_K.tex。
 
 要求：
 1. 仅写 section body（无 \documentclass、无 \begin{document}）
 2. 覆盖全部：背景、方法、关键公式、核心结果、意义
-3. 至少 X 汉字（按论文篇幅调整，综述类 5000+，方法类 3000+）
+3. 至少 X 单词/汉字（按论文篇幅调整，综述类 5000+，方法类 3000+）
 4. 使用 \subsection{} 组织，用 \textbf{} 标关键词
 5. 用 \cite{key} 引用文献
 
@@ -112,7 +112,7 @@ linewidth: normal(A4)=6.3″, pad=4.7″, screen=8.7″
 - \begin{figure}[htbp] \centering ... \end{figure}
 - \includegraphics[width=X\linewidth]{hash.jpg}
 - X 由 DPI 公式计算（先用 identify 获取像素宽度）
-- 中文 \caption{}，必要时加 \label{fig:xxx}
+- \caption{}，必要时加 \label{fig:xxx}（语言由使用者决定）
 - 深化内容：MD 中有但 TEX 中遗漏的细节
 
 所有图片必须带 .jpg/.png/.pdf 扩展名。
@@ -162,7 +162,7 @@ APS 样式对 `@article` 要求 `journal` 字段；arXiv 论文和技术报告�
 
 调用 `Skill("elegantnote-assistant")` 创建 `main.tex`。该技能会自动从 `assets/` 复制模板文件，根据项目需求选择设备选项。
 
-**主文档模板**（A4 打印，中文）：
+**主文档模板**（A4 打印）：
 
 ```latex
 \documentclass[cn,normal,blue,11pt]{elegantnote}
@@ -232,7 +232,7 @@ grep -c 'Warning' main.blg          # 期望: 0
 | `Missing $ inserted` | `\SI{...}{unit}` 被 `$...$` 包裹 | 去掉外层 `$` |
 | `Missing $ inserted` | 文本模式出现 `_` | 改成 `\_` 或进数学模式 |
 | `Missing $ inserted` | `\includegraphics` 路径有 `_` | 改文件名或加 `\_` |
-| 中文乱码/不显示 | 用了 pdfLaTeX | 换成 XeLaTeX |
+| 非英文文档乱码/不显示 | 用了 pdfLaTeX | 换成 XeLaTeX |
 | `elegantnote.cls not found` | 类文件不在同级 | `Skill("elegantnote-assistant")` 自动处理 |
 | Citation undefined | bibtex 被 `&&` 链跳过 | 用 `;` 替代 `&&` |
 | `\mathbb{1}` 未定义 | 缺 `bbm` 宏包 | `\usepackage{bbm}` |

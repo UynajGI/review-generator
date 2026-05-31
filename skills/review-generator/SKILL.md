@@ -1,6 +1,6 @@
 ---
 name: review-generator
-description: 文献综述生成器。从 N 篇 PDF 到完整综述（每篇详解 + 图片 + 引用），全 subagent 并行驱动，含多轮审核深化。输出语言由输入论文决定。当用户提到"写综述"、"文献综述"、"整理文献"、"批量读论文"、"论文笔记"、"literature review"、或需要把一堆 PDF 整理成带图片和引用的结构化笔记时使用。即使用户没有明确说"综述"，只要涉及多篇论文的批量阅读和整理，也优先使用此技能。
+description: 文献综述生成器。从 N 篇 PDF 到完整综述（每篇详解 + 图片 + 引用），全 subagent 并行驱动，含多轮审核深化。输出语言由使用者决定。当用户提到"写综述"、"文献综述"、"整理文献"、"批量读论文"、"论文笔记"、"literature review"、或需要把一堆 PDF 整理成带图片和引用的结构化笔记时使用。即使用户没有明确说"综述"，只要涉及多篇论文的批量阅读和整理，也优先使用此技能。
 ---
 
 # 文献综述全自动生成器
@@ -146,7 +146,7 @@ python scripts/fetch_bib.py --file dois.txt -o refs/refs.bib
 - `\SI{}{}` 余 `$` → 删掉。`\SI` 是文本命令，不能在 `$...$` 内
 - 图片找不到 → 扩展名丢了，跑 `dpi_check.py` 自动补
 - 引用全 `[?]` → bibtex 没跑或被 `&&` 跳过了
-- 中文乱码 → 没用 XeLaTeX
+- 非英文文档乱码 → 没用 XeLaTeX
 - `\mathbb{1}` 未定义 → 缺 `\usepackage{bbm}`
 
 详细 workflow 在 `references/workflow.md`，当需要完整 agent prompt 模板、DPI 公式推导、或 BibTeX 样式选择细节时查阅。
