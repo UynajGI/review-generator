@@ -127,6 +127,19 @@ python scripts/fetch_bib.py --file dois.txt -o refs/refs.bib
 
 **🔴 CHECKPOINT**：交付前最后确认——展示编译结果，让用户检查 PDF 输出。用户确认无误后再 `git add -A && git commit && git status` 确认 clean。
 
+## 不要做的事（反模式）
+
+| # | 不要做 | 原因 | 正确做法 |
+|---|--------|------|---------|
+| 1 | 串行逐篇读论文 | 16 篇串行 6 小时，并行 10 分钟 | 3 篇以上全并行 spawn subagent |
+| 2 | 编译链用 `&&` | xelatex warning 也 exit≠0，bibtex 被跳过，引用全 `[?]` | 用 `;`：`xelatex main; bibtex main; xelatex main; xelatex main` |
+| 3 | `\SI{}{}` 包在 `$...$` 里 | `\SI` 是文本命令，数学模式报错 | 去掉 `$`，直接写在正文 |
+| 4 | Crossref 用标题搜 DOI | 标题搜索返回太多噪声 | 只用精确 DOI 查询 |
+| 5 | 图片插入后不跑 `dpi_check.py` | 低 DPI 图拉满页宽会锯齿 | 阶段 4 结尾统一跑 `dpi_check.py` |
+| 6 | 没确认主题/篇数/格式就开跑 | 输出设备不匹配，后续 DPI 基准全错 | 阶段 0 三件事必须敲定 |
+| 7 | 审核循环提前退出 | 没等用户说"可以了"就结束 | 阶段 7 等用户明确确认 |
+| 8 | `git add -A` 不看 `git status` | 可能提交构建产物到仓库 | 阶段 8 先 `git status` 再 commit |
+
 ## 遇到问题时
 
 编译阶段的常见坑（也是你 spawn agent 时必须塞进 prompt 的）：
