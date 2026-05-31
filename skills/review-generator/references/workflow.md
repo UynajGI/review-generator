@@ -7,7 +7,7 @@
 
 ## 前置条件
 
-- `Skill("mineru-document-extractor")`：按技能文档安装 `mineru-open-api` CLI 并配置 token
+- `Skill("mineru-document-extractor")`：按技能文档安装 `mineru-open-api` CLI 并配置 token。**进入 Stage 2 前必须验证**：skill 可调用、鉴权有效、模式确认（flash/precision）、批量上限确认、输出目录可写。任一项未通过则暂停，禁止假定可用直接调用
 - `Skill("elegantnote-assistant")`：无需额外安装，模板和脚本已在技能内
 - ImageMagick：`identify --version`（DPI 检查依赖）
 
@@ -43,9 +43,15 @@ project/
 
 ---
 
-## 阶段 1：论文收集
+## 阶段 1：论文收集 + 自动重命名
 
-确定 N 篇论文后，按**时间顺序**分配编号（`01` = 最早，`NN` = 最新）。命名建议：`NN_FirstAuthor_Year_Keyword.pdf`。
+用户只需把 PDF 丢进 `refs/`，不用手动命名。
+
+**1a. 提取元数据**：对每个 PDF spawn 一个 subagent，读取 PDF 首页返回：第一作者姓氏、发表年份、1-2 个关键词。格式：`{year}|{first_author}|{keyword}`。
+
+**1b. 排序重命名**：收集所有元数据后按年份升序排列，同年按作者字母序。依次编号为 `NN_FirstAuthor_Year_Keyword.pdf`（如 `01_Leggett_1987_Dissipative.pdf`）。编号即脉络——`01` 是最早的奠基工作。
+
+**门禁**：所有 PDF 未达到 `NN_Author_YYYY_Keyword.pdf` 规范命名前，不得进入 Stage 2。`status.sh` 会统计规范命名比例并卡在 Stage 1。
 
 没有 arXiv 版本的论文记录 DOI 到 `refs/not_found.txt`，之后通过期刊官网获取。
 
@@ -53,7 +59,9 @@ project/
 
 ## 阶段 2：PDF → Markdown 提取
 
-调用 `Skill("mineru-document-extractor")` 批量提取 `refs/` 下所有 PDF。
+**前置门禁**：进入前必须完成 MinerU 可用性检查——加载 skill、确认鉴权（token 有效/额度充足）、确认提取模式（flash/precision）、确认批量上限、确认输出目录可写。任一项未通过则暂停。
+
+全部通过后，调用 `Skill("mineru-document-extractor")` 批量提取 `refs/` 下所有 PDF。
 
 该技能会自动处理 token 配置（学术论文推荐使用 token 模式以获得表格和公式识别），输出 Markdown 到同目录，图片提取到 `refs/images/`（SHA256 hash 命名）。
 
