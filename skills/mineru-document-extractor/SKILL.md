@@ -38,6 +38,9 @@ mineru-open-api version
 4. User declines → use `flash-extract`
 5. If `extract` fails with 401/auth error → token expired, re-ask
 
+**🔴 CHECKPOINT**：执行任何 `extract` 或 `flash-extract` 前，必须先 `auth --verify`。不要假设 token 存在直接跑。
+**🛑 STOP**：`flash-extract` 报错时（exit code 4/5/6），先对照下方 Exit Codes 表判断原因再给用户方案，不要直接重试。
+
 ## Two Extraction Modes
 
 | | `extract` (token) | `flash-extract` (no token) |
