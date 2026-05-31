@@ -48,11 +48,37 @@ echo "refs.bib:            $has_bib"
 echo "main.tex:            $has_main"
 echo ""
 
-# Determine stage
-if [ "$pdf_count" -eq 0 ] && [ "$md_count" -eq 0 ]; then
-  echo "Stage: 1 — PDFs collected, rename them"
+# Count properly renamed PDFs (NN_Author_YYYY_Keyword.pdf)
+renamed_count=0
+unnamed_samples=()
+if [ "$pdf_count" -gt 0 ]; then
+  for f in "$DIR/refs"/*.pdf; do
+    base=$(basename "$f")
+    if [[ "$base" =~ ^[0-9]{2}_[A-Za-z-]+_[0-9]{4}_.*\.pdf$ ]]; then
+      ((renamed_count++))
+    else
+      unnamed_samples+=("$base")
+    fi
+  done
+  # Truncate sample list to 5
+  if [ ${#unnamed_samples[@]} -gt 5 ]; then
+    unnamed_samples=("${unnamed_samples[@]:0:5}")
+  fi
+fi
+
+echo "Properly renamed:    $renamed_count/$pdf_count"
+if [ "$renamed_count" -lt "$pdf_count" ] && [ "$pdf_count" -gt 0 ]; then
+  echo "Unnamed examples:    ${unnamed_samples[*]}"
+fi
+echo ""
+
+# Determine stage (with naming gate)
+if [ "$renamed_count" -lt "$pdf_count" ] && [ "$pdf_count" -gt 0 ]; then
+  echo "Stage: 1 — PDF renaming gate is NOT satisfied"
+  echo "Next: extract metadata, sort by year, rename to NN_Author_YYYY_Keyword.pdf"
 elif [ "$pdf_count" -gt 0 ] && [ "$md_count" -eq 0 ]; then
   echo "Stage: 2 — ready for MinerU extraction"
+  echo "Prerequisite: load mineru-document-extractor skill and verify availability before proceeding"
 elif [ "$md_count" -gt 0 ] && [ "$sec_count" -eq 0 ]; then
   echo "Stage: 3 — ready for parallel deep-reading"
 elif [ "$sec_count" -gt 0 ] && [ "$img_count" -eq 0 ]; then

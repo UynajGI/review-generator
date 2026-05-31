@@ -18,7 +18,7 @@ description: 文献综述生成器。从 N 篇 PDF 到完整综述（每篇详�
 **如果 `status.sh` 输出 Stage -1（连 refs/ 都没有）**：
 → 问用户想在哪里创建项目。目录不存在就 `mkdir -p` 创建，然后建 `refs/`（放 PDF）、`sections/`（输出 .tex）。
 
-**关键**：不主动检查文件是否存在。万一文件有问题，subagent 会报错，那时再处理。
+**关键**：每个阶段启动前必须验证前置条件。status.sh 只是状态快照，不是阶段豁免——Stage 0 三要素确认、Stage 1 规范重命名、Stage 2 前 MinerU 可用性检查均为硬门禁，任一未满足则禁止进入下一阶段。
 
 ## 长任务管理：Goal + Loop
 
@@ -79,7 +79,16 @@ refs/
 
 ### 阶段 2：PDF → Markdown
 
-调用 `Skill("mineru-document-extractor")` 批量提取。该技能会自动处理 token 配置（学术论文推荐 token 模式，支持表格和公式识别）。输出 Markdown 到 `refs/`，图片到 `refs/images/`。
+**🔴 CHECKPOINT**：进入 Stage 2 前，必须先完成 MinerU 可用性检查：
+
+1. 加载 `Skill("mineru-document-extractor")`，确认 skill 已安装且可调用
+2. 确认调用方式（CLI / API / MCP）
+3. 确认鉴权状态（token 是否有效、额度是否充足）
+4. 确认提取模式（flash / precision）及适用场景
+5. 确认批量大小上限（77 篇不能一次全丢）
+6. 确认输出目录 `refs/` 和 `refs/images/` 可写入
+
+以上任一项未通过则暂停，报告用户具体缺失项，禁止假定"应该能用"直接调用。全部通过后再批量提取。该技能会自动处理 token 配置（学术论文推荐 token 模式，支持表格和公式识别）。输出 Markdown 到 `refs/`，图片到 `refs/images/`。
 
 ### 阶段 3：并行精读
 
