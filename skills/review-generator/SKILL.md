@@ -98,6 +98,7 @@ refs/
 - 用 `\subsection{}` 组织，`\cite{key}` 引用
 - 对前文已介绍的概念简要回顾，新概念充分展开
 - 告诉用户 agent 数量，完成后自动进入下一阶段
+- **失败处理**：如果 subagent 输出明显跳读（< 预期字数 50%）或缺少核心公式 → 重新 spawn 该篇，prompt 追加"前版遗漏：{具体缺失项}"；同一篇重试不超过 2 次，仍失败则标记待人工补全
 
 ### 阶段 4：图片 + DPI
 
@@ -114,6 +115,8 @@ python scripts/fetch_bib.py --file dois.txt -o refs/refs.bib
 脚本通过 Crossref API 精确 DOI 查询获取正式 BibTeX（不依赖标题搜索），arXiv ID 自动生成 `@misc` 条目。重复条目自动跳过。生成 `refs/refs.bib`。
 
 注意：`apsrev4-2` 要求 `@article` 必须有 `journal` 字段，arXiv 论文用 `@misc` 规避。脚本自动处理这个分类。
+
+- **失败处理**：如果 Crossref API 超时或返回 404 → 降级为 arXiv ID `@misc` 条目，DOI 记录到 `not_found.txt` 待人工补全；如果 `fetch_bib.py` 整体失败 → 检查网络和 API 额度，重试一次，仍失败则暂停让用户决定（手动补 bib / 跳过 / 换网络）
 
 ### 阶段 6：主文档与编译
 
@@ -134,6 +137,8 @@ python scripts/fetch_bib.py --file dois.txt -o refs/refs.bib
 6a 和 6b 相互独立，可并行。完成后 `\input` 所有 sections（intro → sec_01...sec_NN → conclusion）。
 
 编译链：`xelatex main; bibtex main; xelatex main; xelatex main`。用 `;` 不用 `&&`——xelatex 的 warning 也导致 exit≠0，会阻断后续步骤。三步检查：`! ` 计 0、`Citation.*undefined` 计 0、`nqs.blg` 中 `Warning` 计 0。
+
+- **失败处理**：如果三步检查任一非零 → 对照"遇到问题时"排错表逐项修复，修复后重新完整编译链，最多迭代 5 轮；超过 5 轮仍有错 → 暂停，展示剩余错误让用户介入
 
 ### 阶段 7：审核 + 深化
 
