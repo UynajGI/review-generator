@@ -23,8 +23,11 @@ project/
 │   ├── ...
 │   └── refs.bib            # 参考文献
 ├── sections/               # Subagent 输出的 LaTeX 章节
+│   ├── intro.tex
 │   ├── sec_01.tex
+│   ├── sec_02.tex
 │   └── ...
+│   └── conclusion.tex
 └── workflow-lit-review.md  # 本文档
 ```
 
@@ -166,9 +169,27 @@ APS 样式对 `@article` 要求 `journal` 字段；arXiv 论文和技术报告�
 
 ## 阶段 6：主文档与编译
 
+### 引言与总结
+
+在创建主文档前，先并行 spawn 两个 subagent 写引言和总结：
+
+**引言 agent**：阅读全部 `sections/sec_*.tex`，写出 `sections/intro.tex`。要求：
+- 预告 N 篇论文的逻辑脉络（不是罗列标题，是讲清楚这个领域从哪来到哪去）
+- 说明研究背景和核心问题
+- 简要预告各阶段的演进关系
+- 仅写 `\section{引言}` body，无 preamble
+
+**总结 agent**：阅读全部 sections，写出 `sections/conclusion.tex`。要求：
+- 收束全文脉络，总结关键进展
+- 指出当前方法的局限和未解决的问题
+- 展望未来方向
+- 仅写 `\section{总结与展望}` body，无 preamble
+
+两者独立可并行。完成后进入主文档创建。
+
 ### 创建主文档
 
-调用 `Skill("elegantnote-assistant")` 创建 `main.tex`。该技能会自动从 `assets/` 复制模板文件，根据项目需求选择设备选项。
+调用 `Skill("elegantnote-assistant")` 创建 `main.tex`。该技能会自动从 `assets/` 复制模板文件，根据项目需求选择设备选项。`\input` 顺序：intro → sec_01...sec_NN → conclusion。
 
 **主文档模板**（A4 打印）：
 
@@ -192,8 +213,7 @@ APS 样式对 `@article` 要求 `journal` 字段；arXiv 论文和技术报告�
 \tableofcontents
 \clearpage
 
-\section{引言}
-% 写清楚 N 篇论文的逻辑脉络
+\input{sections/intro}
 
 \input{sections/sec_01}
 \clearpage
@@ -201,8 +221,7 @@ APS 样式对 `@article` 要求 `journal` 字段；arXiv 论文和技术报告�
 \clearpage
 % ... 按时间顺序 \input 所有 section
 
-\section{总结与展望}
-% 收束脉络，指出未竟之业
+\input{sections/conclusion}
 
 \bibliographystyle{apsrev4-2}
 \bibliography{refs/refs}

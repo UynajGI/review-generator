@@ -117,7 +117,21 @@ python scripts/fetch_bib.py --file dois.txt -o refs/refs.bib
 
 ### 阶段 6：主文档与编译
 
-调用 `Skill("elegantnote-assistant")` 创建 `main.tex`，选设备选项（默认 A4 `normal`）。`\input` 所有 sections，加引言（预告脉络）和总结（收束未竟之业）。
+调用 `Skill("elegantnote-assistant")` 创建 `main.tex`，选设备选项（默认 A4 `normal`）。
+
+**6a. 引言**：spawn 一个 subagent，阅读全部 `sections/sec_*.tex`，写出 `sections/intro.tex`。要求：
+- 预告 N 篇论文的逻辑脉络（不是罗列标题，是讲清楚这个领域从哪来到哪去）
+- 说明研究背景和核心问题
+- 简要预告各阶段的演进关系
+- 仅写 `\section{引言}` body，无 preamble
+
+**6b. 总结**：spawn 一个 subagent，阅读全部 sections，写出 `sections/conclusion.tex`。要求：
+- 收束全文脉络，总结关键进展
+- 指出当前方法的局限和未解决的问题
+- 展望未来方向
+- 仅写 `\section{总结与展望}` body，无 preamble
+
+6a 和 6b 相互独立，可并行。完成后 `\input` 所有 sections（intro → sec_01...sec_NN → conclusion）。
 
 编译链：`xelatex main; bibtex main; xelatex main; xelatex main`。用 `;` 不用 `&&`——xelatex 的 warning 也导致 exit≠0，会阻断后续步骤。三步检查：`! ` 计 0、`Citation.*undefined` 计 0、`nqs.blg` 中 `Warning` 计 0。
 
