@@ -54,9 +54,17 @@ Goal 会在 session 结束时提醒用户未完成，下次打开时自动续接
 
 **🔴 CHECKPOINT**：处理任何 PDF 之前，必须先和用户敲定三件事：综述主题、预期论文数量、输出格式偏好（A4=打印用 `normal`、平板用 `pad`、投影用 `screen`）。格式决定后续 ElegantNote 设备选项和 DPI 计算基准。三件事未确认前不进入阶段 1。
 
-### 阶段 1：论文收集 + 自动重命名
+### 阶段 1：论文收集 + 自动重命名 + DOI 提取
 
-用户只需把 PDF 丢进 `refs/`，不用手动命名。接下来的流程：
+用户只需把 PDF 丢进 `refs/`，不用手动命名。
+
+**前置条件**：用户必须安装 `pdf2doi`：
+```bash
+pipx install pdf2doi       # 推荐（隔离环境）
+# 或: uv tools install pdf2doi
+# 或: pip install pdf2doi
+```
+未安装则暂停，提示用户先安装。
 
 **1a. 提取元数据**：对每个 PDF spawn 一个 subagent，读取 PDF 首页（或通过 MinerU 快速提取标题/摘要），返回：
 - 第一作者姓氏
@@ -75,7 +83,21 @@ refs/
 
 编号即脉络——`01` 是最早的奠基工作，后续论文依次建立在前面基础上。如果有论文无法确定年份（arXiv 预印本），用 arXiv 提交日期。
 
-非 arXiv 论文记录 DOI 到 `refs/not_found.txt`，之后通过期刊官网获取。
+**1c. 提取 DOI / arXiv ID**：对每个重命名后的 PDF 跑 `pdf2doi <path>`，提取到的标识符追加到文件名末尾。用 `__` 分隔，DOI 中的 `/` 替换为 `_`：
+
+```
+refs/
+├── 01_Chakravarty_1984_Ohmic__10.1103_PhysRevB.31.5467.pdf
+├── 02_Olivares-Amaya_2015_DMRG__10.1103_PhysRevB.91.155129.pdf
+├── 03_LeCun_2015_Deep_Learning__1501.00571.pdf
+└── ...
+```
+
+- DOI 示例：`10.1103/PhysRevLett.102.030601` → 追加 `__10.1103_PhysRevLett.102.030601`
+- arXiv 示例：`2301.00001` → 追加 `__2301.00001`
+- 提取失败的 PDF 记录到 `refs/not_found.txt`，之后手动补全
+
+`pdf2doi` 支持批量：`pdf2doi refs/` 一次处理整个目录，输出格式为 `DOI  <identifier>  <filepath>`。
 
 ### 阶段 2：PDF → Markdown
 
