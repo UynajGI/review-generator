@@ -54,7 +54,7 @@ Goal 会在 session 结束时提醒用户未完成，下次打开时自动续接
 
 **🔴 CHECKPOINT**：处理任何 PDF 之前，必须先和用户敲定三件事：综述主题、预期论文数量、输出格式偏好（A4=打印用 `normal`、平板用 `pad`、投影用 `screen`）。格式决定后续 ElegantNote 设备选项和 DPI 计算基准。三件事未确认前不进入阶段 1。
 
-### 阶段 1：论文收集 + 自动重命名 + DOI 提取
+### 阶段 1：论文收集 + DOI 提取 + 自动重命名
 
 用户只需把 PDF 丢进 `refs/`，不用手动命名。
 
@@ -66,38 +66,36 @@ pipx install pdf2doi       # 推荐（隔离环境）
 ```
 未安装则暂停，提示用户先安装。
 
-**1a. 提取元数据**：对每个 PDF spawn 一个 subagent，读取 PDF 首页（或通过 MinerU 快速提取标题/摘要），返回：
-- 第一作者姓氏
-- 发表年份
+**1a. 提取 DOI / arXiv ID**：对每个 PDF 跑 `pdf2doi <path>`（支持批量：`pdf2doi refs/`），输出格式为 `DOI  <identifier>  <filepath>`。解析输出，得到每个 PDF 的 DOI 或 arXiv ID。提取失败的记录到 `refs/not_found.txt`。
+
+**1b. 通过 DOI 获取正式元数据**：对每个成功提取的 DOI，用 Crossref API 查询正式元数据：
+```bash
+curl -s "https://api.crossref.org/works/DOI_HERE" | python3 -c "
+import json, sys
+msg = json.load(sys.stdin)['message']
+author = msg['author'][0]['family']
+year = msg['published-print']['date-parts'][0][0]
+title = msg['title'][0]
+print(f'{year}|{author}|{title}')
+"
+```
+对于 arXiv ID，用 arXiv API 获取元数据。返回：
+- 第一作者姓氏（正式来源）
+- 发表年份（正式来源）
 - 1-2 个关键词（从标题取）
-- 格式：`{year}|{first_author}|{keyword}`
+- DOI 或 arXiv ID
 
-**1b. 排序重命名**：收集所有 agent 返回的元数据，按年份升序排列。同年论文按作者字母序。然后依次编号：
-```
-refs/
-├── 01_White_1992_DMRG.pdf
-├── 02_Olivares-Amaya_2015_Ab-Initio_DMRG.pdf
-├── 03_LeCun_2015_Deep_Learning.pdf
-└── ...
-```
-
-编号即脉络——`01` 是最早的奠基工作，后续论文依次建立在前面基础上。如果有论文无法确定年份（arXiv 预印本），用 arXiv 提交日期。
-
-**1c. 提取 DOI / arXiv ID**：对每个重命名后的 PDF 跑 `pdf2doi <path>`，提取到的标识符追加到文件名末尾。用 `__` 分隔，DOI 中的 `/` 替换为 `_`：
+**1c. 排序重命名**：收集所有元数据，按年份升序排列。同年论文按作者字母序。然后依次编号，DOI/arXiv ID 追加到末尾（`__` 分隔，DOI 中 `/` 替换为 `_`）：
 
 ```
 refs/
 ├── 01_Chakravarty_1984_Ohmic__10.1103_PhysRevB.31.5467.pdf
-├── 02_Olivares-Amaya_2015_DMRG__10.1103_PhysRevB.91.155129.pdf
-├── 03_LeCun_2015_Deep_Learning__1501.00571.pdf
+├── 02_Leggett_1987_twoState__10.1103_RevModPhys.59.1.pdf
+├── 03_LeCun_2015_DeepLearning__1501.00571.pdf
 └── ...
 ```
 
-- DOI 示例：`10.1103/PhysRevLett.102.030601` → 追加 `__10.1103_PhysRevLett.102.030601`
-- arXiv 示例：`2301.00001` → 追加 `__2301.00001`
-- 提取失败的 PDF 记录到 `refs/not_found.txt`，之后手动补全
-
-`pdf2doi` 支持批量：`pdf2doi refs/` 一次处理整个目录，输出格式为 `DOI  <identifier>  <filepath>`。
+编号即脉络——`01` 是最早的奠基工作，后续论文依次建立在前面基础上。如果有论文无法确定年份（arXiv 预印本），用 arXiv 提交日期。
 
 ### 阶段 2：PDF → Markdown
 

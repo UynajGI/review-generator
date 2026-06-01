@@ -26,7 +26,7 @@ Core ideas:
 - **One subagent per paper, no content skipped**: sequential reading makes AI lazy and skip details; parallel subagents ensure every paper gets full deep reading — formulas, data, and physical interpretations preserved
 - **Chronological narrative**: papers are auto-sorted by year and author, building a timeline from foundational work to latest advances
 
-- Automatic paper renaming and chronological ordering
+- Automatic DOI extraction, paper renaming and chronological ordering
 - PDF → Markdown batch extraction (MinerU OCR)
 - Parallel subagent deep reading, one structured section per paper
 - Image insertion with DPI-adaptive sizing
