@@ -37,7 +37,7 @@ elegantnote-assistant      (Stage 4/6: DPI check + main.tex creation + compilati
 
 ## The 8-stage pipeline (review-generator)
 
-Each stage writes `echo "N" > .lit-review-stage` on completion. `status.sh` reads this file for cross-session continuity.
+Each stage writes `echo "N" > .review-generator-stage` on completion. `status.sh` reads this file for cross-session continuity.
 
 0. Confirm topic, paper count, output format (normal/pad/screen — determines DPI baseline)
 1. `pdf2doi` for DOI/arXiv ID → Crossref/arXiv API for formal metadata → rename to `NN_Author_YYYY_Keyword__DOI.pdf`

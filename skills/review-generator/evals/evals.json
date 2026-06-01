@@ -1,5 +1,5 @@
 {
-  "skill_name": "lit-review",
+  "skill_name": "review-generator",
   "evals": [
     {
       "id": 1,
@@ -9,7 +9,7 @@
     },
     {
       "id": 2,
-      "prompt": "我之前已经用lit-review做了5篇论文的精读，sections都写好了，现在想加图片。",
+      "prompt": "我之前已经用review-generator做了5篇论文的精读，sections都写好了，现在想加图片。",
       "expected_output": "Status script detects existing sections, orchestrator jumps to Stage 4 (image insertion) without redoing previous stages.",
       "files": []
     },

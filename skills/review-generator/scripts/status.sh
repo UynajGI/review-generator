@@ -1,11 +1,11 @@
 #!/bin/bash
-# Detect which stage the lit-review project is at.
+# Detect which stage the review-generator project is at.
 # Usage: bash scripts/status.sh [project_dir]
 # Output: stage number (0-8) and human-readable status
 
 DIR="${1:-.}"
 
-echo "=== lit-review status ==="
+echo "=== review-generator status ==="
 echo "Directory: $(realpath "$DIR")"
 echo ""
 

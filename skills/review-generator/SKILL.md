@@ -36,7 +36,7 @@ Goal 会在 session 结束时提醒用户未完成，下次打开时自动续接
 ```
 这样在用户手动修改 section 后，编译-审核-深化循环可以自动推进。
 
-**状态文件**：每次阶段结束后，在项目根目录写一个 `.lit-review-stage` 文件记录当前阶段号，下次 `status.sh` 会读取。跨 session 无需重新判断。
+**状态文件**：每次阶段结束后，在项目根目录写一个 `.review-generator-stage` 文件记录当前阶段号，下次 `status.sh` 会读取。跨 session 无需重新判断。
 
 ## 核心工作方式
 
@@ -48,7 +48,7 @@ Goal 会在 session 结束时提醒用户未完成，下次打开时自动续接
 
 ## 八个阶段
 
-每个阶段结束后：向用户汇报结果，把当前阶段号写入项目根目录的 `.lit-review-stage` 文件（`echo "N" > .lit-review-stage`），然后确认是否继续。
+每个阶段结束后：向用户汇报结果，把当前阶段号写入项目根目录的 `.review-generator-stage` 文件（`echo "N" > .review-generator-stage`），然后确认是否继续。
 
 ### 阶段 0：确认目标
 

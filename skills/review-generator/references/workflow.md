@@ -28,7 +28,7 @@ project/
 │   ├── sec_02.tex
 │   └── ...
 │   └── conclusion.tex
-└── workflow-lit-review.md  # 本文档
+└── workflow.md  # 本文档
 ```
 
 ---
