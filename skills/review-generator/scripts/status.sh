@@ -48,14 +48,19 @@ echo "refs.bib:            $has_bib"
 echo "main.tex:            $has_main"
 echo ""
 
-# Count properly renamed PDFs (NN_Author_YYYY_Keyword.pdf)
+# Count properly renamed PDFs (NN_Author_YYYY_Keyword.pdf or NN_Author_YYYY_Keyword__DOI.pdf)
 renamed_count=0
+doi_count=0
 unnamed_samples=()
 if [ "$pdf_count" -gt 0 ]; then
   for f in "$DIR/refs"/*.pdf; do
     base=$(basename "$f")
-    if [[ "$base" =~ ^[0-9]{2}_[A-Za-z-]+_[0-9]{4}_.*\.pdf$ ]]; then
+    if [[ "$base" =~ ^[0-9]{2}_[A-Za-z\ -]+_[0-9]{4}_.*\.pdf$ ]]; then
       ((renamed_count++))
+      # Check if DOI/arXiv ID is appended (NN_Author_YYYY_Keyword__IDENTIFIER.pdf)
+      if [[ "$base" =~ ^[0-9]{2}_[A-Za-z\ -]+_[0-9]{4}_.*__.*\.pdf$ ]]; then
+        ((doi_count++))
+      fi
     else
       unnamed_samples+=("$base")
     fi
@@ -66,16 +71,31 @@ if [ "$pdf_count" -gt 0 ]; then
   fi
 fi
 
+# Check pdf2doi availability
+pdf2doi_ok="no"
+if command -v pdf2doi &>/dev/null; then
+  pdf2doi_ok="yes"
+fi
+
 echo "Properly renamed:    $renamed_count/$pdf_count"
+echo "With DOI/arXiv ID:   $doi_count/$pdf_count"
+echo "pdf2doi available:   $pdf2doi_ok"
 if [ "$renamed_count" -lt "$pdf_count" ] && [ "$pdf_count" -gt 0 ]; then
   echo "Unnamed examples:    ${unnamed_samples[*]}"
 fi
 echo ""
 
-# Determine stage (with naming gate)
+# Determine stage
 if [ "$renamed_count" -lt "$pdf_count" ] && [ "$pdf_count" -gt 0 ]; then
-  echo "Stage: 1 — PDF renaming gate is NOT satisfied"
-  echo "Next: extract metadata, sort by year, rename to NN_Author_YYYY_Keyword.pdf"
+  echo "Stage: 1 — PDF 未规范命名"
+  if [ "$pdf2doi_ok" = "no" ]; then
+    echo "Next: pipx install pdf2doi → pdf2doi refs/ 提取 DOI → Crossref 查元数据 → 重命名为 NN_Author_YYYY_Keyword__IDENTIFIER.pdf"
+  else
+    echo "Next: pdf2doi refs/ 提取 DOI → Crossref 查元数据 → 重命名为 NN_Author_YYYY_Keyword__IDENTIFIER.pdf"
+  fi
+elif [ "$doi_count" -lt "$pdf_count" ] && [ "$pdf_count" -gt 0 ]; then
+  echo "Stage: 1 — PDF 已重命名但缺少 DOI/arXiv ID"
+  echo "Next: pdf2doi refs/ 提取 DOI → 用 DOI 元数据修正 author/year → 重新编号 → 追加 DOI 到文件名"
 elif [ "$pdf_count" -gt 0 ] && [ "$md_count" -eq 0 ]; then
   echo "Stage: 2 — ready for MinerU extraction"
   echo "Prerequisite: load mineru-document-extractor skill and verify availability before proceeding"
