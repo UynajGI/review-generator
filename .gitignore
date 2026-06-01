@@ -32,5 +32,8 @@ venv/
 *~
 .DS_Store
 
+# Skill evals
+test-prompts.json
+
 # OS
 Thumbs.db
