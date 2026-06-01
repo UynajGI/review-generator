@@ -73,7 +73,7 @@ npm install -g mineru-open-api
     ├── review-generator/
     │   ├── SKILL.md
     │   ├── scripts/
-    │   │   ├── status.sh          # 项目阶段检测
+    │   │   ├── status.sh          # 项目阶段检测（含跨 session 连续性）
     │   │   └── fetch_bib.py       # Crossref 参考文献获取
     │   ├── references/
     │   │   └── workflow.md

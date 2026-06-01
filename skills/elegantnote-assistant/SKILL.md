@@ -95,9 +95,9 @@ ElegantNote 基于 `article`，所有选项可作为 `\documentclass[options]{el
 ### 原理
 
 ```
-scale = floor(pixel_width / (DPI_target × linewidth_inches))
+scale = floor(pixel_width / (DPI_min × linewidth_inches))
 linewidth_inches: normal=6.3, pad=4.7, screen=8.7, kindle=2.8
-DPI_min=120（底线），DPI_target=150
+DPI_min = 120（低于此值需缩小图片）
 ```
 
 ### 操作

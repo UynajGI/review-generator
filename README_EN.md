@@ -73,7 +73,7 @@ npm install -g mineru-open-api
     ├── review-generator/
     │   ├── SKILL.md
     │   ├── scripts/
-    │   │   ├── status.sh          # Project stage detection
+    │   │   ├── status.sh          # Project stage detection (cross-session continuity)
     │   │   └── fetch_bib.py       # Crossref bibliography fetcher
     │   ├── references/
     │   │   └── workflow.md

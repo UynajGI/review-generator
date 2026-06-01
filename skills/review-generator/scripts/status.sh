@@ -9,6 +9,16 @@ echo "=== review-generator status ==="
 echo "Directory: $(realpath "$DIR")"
 echo ""
 
+# Read recorded stage for cross-session continuity
+recorded_stage=""
+if [ -f "$DIR/.review-generator-stage" ]; then
+  recorded_stage=$(head -n1 "$DIR/.review-generator-stage" | tr -d '[:space:]')
+  echo "Recorded stage:      $recorded_stage (from .review-generator-stage)"
+else
+  echo "Recorded stage:      — (no .review-generator-stage yet)"
+fi
+echo ""
+
 # Stage 0: no refs/ at all
 if [ ! -d "$DIR/refs" ]; then
   echo "Stage: -1 — no refs/ directory yet (need to bootstrap)"
@@ -109,4 +119,11 @@ elif [ "$has_main" = "yes" ] && [ "$has_bib" = "yes" ]; then
   echo "Stage: 6/7 — compile + review"
 else
   echo "Stage: 4-5 — in progress (has sections=$sec_count, images=$img_count, bib=$has_bib)"
+fi
+
+# Cross-session hint
+if [ -n "$recorded_stage" ]; then
+  echo ""
+  echo "Note: .review-generator-stage records Stage $recorded_stage as last completed."
+  echo "If filesystem state suggests an earlier stage, some steps may need to be redone."
 fi
